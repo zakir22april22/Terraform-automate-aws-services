@@ -1,7 +1,9 @@
+#VPC CREATE
 resource "aws_vpc" "myvpc" {
     cidr_block = var.cidr
 }
 
+#PUBLIC-SUBNET
 resource "aws_subnet" "sub1" {
     vpc_id = aws_vpc.myvpc.id
     cidr_block = var.cidr1
@@ -24,6 +26,7 @@ resource "aws_subnet" "sub2" {
   }
 }
 
+#INTERNET-GATEWAY
 resource "aws_internet_gateway" "myigw" {
     vpc_id = aws_vpc.myvpc.id
     tags = {
@@ -31,6 +34,7 @@ resource "aws_internet_gateway" "myigw" {
   }
 }
 
+#ROUTE-TABLE
 resource "aws_route_table" "RT" {
     vpc_id = aws_vpc.myvpc.id
 
@@ -41,6 +45,7 @@ resource "aws_route_table" "RT" {
   
 }
 
+#ROUTE-TABLE-ASSOCIATION
 resource "aws_route_table_association" "rts1" {
     subnet_id = aws_subnet.sub1.id
     route_table_id = aws_route_table.RT.id
@@ -54,6 +59,7 @@ resource "aws_route_table_association" "rts2" {
   
 }
 
+#SECURITY-GROUP
 resource "aws_security_group" "sg" {
   name        = "web-sg"
   vpc_id      = aws_vpc.myvpc.id
@@ -87,10 +93,12 @@ resource "aws_security_group" "sg" {
   }
 }
 
+#S3-BUCKET
 resource "aws_s3_bucket" "s3-bucket" {
     bucket = "05-02-1997-bucket"
 }
 
+#EC2-INSTANCE CREATE
 resource "aws_instance" "webserver1" {
   ami           = "ami-053b0d53c279acc90"
   instance_type = "t2.micro"
